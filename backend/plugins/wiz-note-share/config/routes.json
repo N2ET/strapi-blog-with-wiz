@@ -1,0 +1,35 @@
+{
+  "routes": [
+    {
+      "method": "GET",
+      "path": "/",
+      "handler": "wiz-note-share.index",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/config",
+      "handler": "wiz-note-share.findConfig",
+      "config": {
+        "policies": []
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/articles",
+      "handler": "wiz-note-share.create"
+    },
+    {
+      "method": "GET",
+      "path": "/articles",
+      "handler": "wiz-note-share.find"
+    },
+    {
+      "method": "GET",
+      "path": "/articles/:slug",
+      "handler": "wiz-note-share.findOne"
+    }
+  ]
+}
