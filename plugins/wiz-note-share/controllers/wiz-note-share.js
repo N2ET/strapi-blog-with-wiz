@@ -49,6 +49,14 @@ module.exports = {
     });
   },
 
+  find: async (ctx) => {
+      return strapi.controllers.article.find(ctx);
+  },
+
+  findOne: async (ctx) => {
+    return strapi.controllers.article.findOne(ctx);
+  },
+
   create: async (ctx) => {
 
     if (!ctx.request.body?.url) {

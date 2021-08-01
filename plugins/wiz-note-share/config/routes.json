@@ -20,6 +20,19 @@
       "method": "POST",
       "path": "/articles",
       "handler": "wiz-note-share.create"
+    },
+    {
+      "method": "GET",
+      "path": "/articles",
+      "handler": "wiz-note-share.find"
+    },
+    {
+      "method": "GET",
+      "path": "/articles/:slug",
+      "handler": "wiz-note-share.findOne",
+      "config": {
+        "policies": []
+      }
     }
   ]
 }

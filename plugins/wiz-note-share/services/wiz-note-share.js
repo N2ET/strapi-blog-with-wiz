@@ -11,10 +11,13 @@ const axios = require('axios');
 const AGENT = 'strapi-plugin-wiz-note-share 1.0';
 const TIMEOUT = 60 * 1000;
 
+function getWizArticlePathname (url) {
+    return new URL(url).pathname;
+}
 
 function getWizArticleDataUrl (url) {
     
-    let pagePath = new URL(url).pathname;
+    let pagePath = getWizArticlePathname(url);
     let id = pagePath.match(/[^/]+$/)[0];
 
     return url.replace(pagePath, `/share/api/shares/${id}`);
@@ -145,7 +148,10 @@ const service = module.exports = {
     
                 article = await strapi.services.article.create({
                     title: data.title,
-                    content: text,
+
+                    // content: text,
+                    content: getWizArticlePathname(url),
+
                     slug: getSlug(data.title),
                     type: 'wiznote',
                     wizUrl: url,
@@ -161,7 +167,10 @@ const service = module.exports = {
                     id: article.id
                 }, {
                     title: data.title,
-                    content: text,
+                    
+                    // content: text,
+                    content: getWizArticlePathname(url),
+
                     slug: getSlug(data.title)
                 });
             }
