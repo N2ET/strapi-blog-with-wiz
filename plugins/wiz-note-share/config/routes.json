@@ -29,10 +29,7 @@
     {
       "method": "GET",
       "path": "/articles/:slug",
-      "handler": "wiz-note-share.findOne",
-      "config": {
-        "policies": []
-      }
+      "handler": "wiz-note-share.findOne"
     }
   ]
 }
