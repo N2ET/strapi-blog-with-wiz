@@ -1,21 +1,12 @@
 'use strict';
 
-const { default: createStrapi } = require('strapi');
 /**
  * wiz-note-share.js controller
  *
  * @description: A set of functions called "actions" of the `wiz-note-share` plugin.
  */
 
-const { sanitizeEntity } = require('strapi-utils');
-
-function getModelName () {
-  return 'plugins::wiz-note-share.wiz-note';
-}
-
-function getModel () {
-  return strapi.plugins['wiz-note-share'].models['wiz-note'];
-}
+// const { sanitizeEntity } = require('strapi-utils');
 
 function getService () {
   return strapi.plugins['wiz-note-share'].services['wiz-note-share'];
@@ -40,13 +31,10 @@ module.exports = {
 
   findConfig: async (ctx) => {
 
-    const entity = await strapi.entityService.find({}, {
-      model: getModelName()
-    });
+    const service = getService();
+    const config = await service.getStoreData();
 
-    return sanitizeEntity(entity, {
-      model: getModel()
-    });
+    return config;
   },
 
   find: async (ctx) => {
