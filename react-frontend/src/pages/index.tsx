@@ -14,21 +14,16 @@ import axios from 'axios';
 import styles from './index.less';
 
 export default function IndexPage() {
+  
   const [data, setData] = useState({
     data: [] as any[],
-    msg: '',
-    loaded: false,
+    msg: ''
   } as any);
+
   let list = data.data as any[];
   let msg = data.msg;
 
-  // 这里如何使用async
   useEffect(() => {
-    if (data.loaded) {
-      return;
-    }
-
-    // 无限次请求
     axios
       .get('/wiz-note-share/articles')
       .then((res) => {
@@ -36,18 +31,16 @@ export default function IndexPage() {
 
         setData({
           data: res.data,
-          msg: msg,
-          loaded: true,
+          msg: msg
         });
       })
       .catch(() => {
         setData({
           data: [],
-          msg: '装载失败，be happy ^_^',
-          loaded: true,
+          msg: '装载失败，be happy ^_^'
         });
       });
-  });
+  }, []);
 
   return (
     <>
@@ -61,7 +54,8 @@ export default function IndexPage() {
           renderItem={(item) => (
             <List.Item>
               <List.Item.Meta
-                title={<a href={`/article?id=${item.id}`}>item.title</a>}
+                // title={<a href={`/article?id=${item.id}`}>{item.title}</a>}
+                title={<a href={`/article/${item.slug}`}>{item.title}</a>}
                 description={item.category.name}
               />
             </List.Item>

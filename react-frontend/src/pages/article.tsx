@@ -5,7 +5,7 @@ import { useState } from 'react';
 import styles from './article.css';
 
 export default function Page(props) {
-  const id = props.location.query.id;
+  const id = props.match.params.id;
 
   // 这个会提示 不能将类型“MutableRefObject<HTMLIFrameElement | undefined>”分配给类型“LegacyRef<HTMLIFrameElement> | undefined”。
   // let iframeRef = useRef<HTMLIFrameElement|undefined>();
@@ -13,32 +13,28 @@ export default function Page(props) {
 
   const [data, setData] = useState({
     article: {} as any,
-    loaded: false,
     msg: '',
   });
   const article = data.article;
 
   useEffect(() => {
-    if (data.loaded) {
-      return;
-    }
+
     axios
       .get(`/wiz-note-share/articles/${id}`)
       .then((res) => {
+
         setData({
           article: res.data,
-          loaded: true,
           msg: res.data ? '' : '装载失败，be happy ^_^',
         });
       })
       .catch(() => {
         setData({
           article: {},
-          loaded: true,
           msg: '装载失败，be happy ^_^',
         });
       });
-  });
+  }, []);
 
   useEffect(() => {
     if (iframeRef.current) {

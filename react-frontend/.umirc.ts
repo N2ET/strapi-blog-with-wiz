@@ -11,7 +11,7 @@ export default defineConfig({
       component: '@/layouts/index',
       routes: [
         { path: '/', component: '@/pages/index' },
-        { path: '/article', component: '@/pages/article' },
+        { path: '/article/:id', component: '@/pages/article' },
       ],
     },
   ],
