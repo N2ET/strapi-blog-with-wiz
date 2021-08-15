@@ -11,6 +11,7 @@ export default defineConfig({
       component: '@/layouts/index',
       routes: [
         { path: '/', component: '@/pages/index' },
+        // { path: '/article/:id', component: '@/pages/article_new' },
         { path: '/article/:id', component: '@/pages/article' },
       ],
     },
@@ -35,6 +36,10 @@ export default defineConfig({
       changeOrigin: true,
     },
     '/share': {
+      target: 'http://localhost:1337',
+      changeOrigin: true,
+    },
+    '/uploads': {
       target: 'http://localhost:1337',
       changeOrigin: true,
     },

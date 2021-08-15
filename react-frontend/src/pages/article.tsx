@@ -42,8 +42,9 @@ export default function Page(props) {
         let lastHeight = 0;
         let retry = 0;
 
-        function setHeight() {
-          let height = iframeRef.current?.contentWindow.document.querySelector(
+        function fixContent() {
+          let doc = iframeRef.current?.contentWindow.document;
+          let height = doc.querySelector(
             '.jss23',
           )?.scrollHeight;
 
@@ -61,10 +62,15 @@ export default function Page(props) {
             // }
           }
 
-          setTimeout(setHeight, 100);
+          let el = doc?.querySelector('.jss67');
+          if (el) {
+            el.style = "display: none";
+          }
+
+          setTimeout(fixContent, 100);
         }
 
-        setHeight();
+        fixContent();
       });
     }
   });
@@ -77,7 +83,7 @@ export default function Page(props) {
         <iframe
           ref={iframeRef}
           className={styles.iframe}
-          src={article.content}
+          src={article.wizUrl}
         ></iframe>
       )}
     </div>

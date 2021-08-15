@@ -21,9 +21,6 @@ function formatAuthor (author) {
 }
 
 function formatArticle (data) {
-  
-  delete data.wizUrl;
-
   return data;
 }
 

@@ -46,10 +46,10 @@ const service = module.exports = {
 
     async createWizArticle ({ url, userId }) {
 
-        let text  = await service.getWizNoteArticle({ url });
+        let page  = await service.getWizNoteArticle({ url });
         let data = await service.getWizNoteArticleData({ url });
 
-        if (!text.data || !data.data) {
+        if (!page.data || !data.data) {
             return {
                 error: new Error('createWizAritcle fetch article failed')
             };
@@ -59,7 +59,7 @@ const service = module.exports = {
             return await service.createArticle({
                 url: url,
                 data: data.data,
-                text: text.data,
+                page: page.data,
                 userId
             });
 
@@ -120,7 +120,9 @@ const service = module.exports = {
                     title: formatTitle(wizData.title),
                     category: formatCategory(wizData.doc.category),
                     userId: wizData.user.id,
-                    userName: wizData.user.displayName
+                    userName: wizData.user.displayName,
+                    text: wizData.doc.abstractText,
+                    html: wizData.doc.html
                 }
             };
 
@@ -132,7 +134,7 @@ const service = module.exports = {
         }
     },
 
-    async createArticle ({ url, data, text, userId }) {
+    async createArticle ({ url, data, page, userId }) {
 
         let categoryName = data.category[data.category.length - 1] || '默认分类';
 
@@ -147,7 +149,7 @@ const service = module.exports = {
             }
     
             let article = await strapi.services.article.findOne({
-                wizUrl: url
+                wizUrl: getWizArticlePathname(url)
             });
     
             if (!article) {
@@ -155,12 +157,11 @@ const service = module.exports = {
                 article = await strapi.services.article.create({
                     title: data.title,
 
-                    // content: text,
-                    content: getWizArticlePathname(url),
+                    content: data.text,
 
                     slug: getSlug(data.title),
                     type: 'wiznote',
-                    wizUrl: url,
+                    wizUrl: getWizArticlePathname(url),
                     created_at: data.created,
     
                     category: category.id,
@@ -174,8 +175,7 @@ const service = module.exports = {
                 }, {
                     title: data.title,
                     
-                    // content: text,
-                    content: getWizArticlePathname(url),
+                    content: data.text,
 
                     slug: getSlug(data.title)
                 });

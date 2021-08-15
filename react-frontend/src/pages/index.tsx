@@ -1,9 +1,5 @@
 import {
-  // Typography
-  PageHeader,
   List,
-  Avator,
-  Space,
   Typography,
 } from 'antd';
 
@@ -14,7 +10,7 @@ import axios from 'axios';
 import styles from './index.less';
 
 export default function IndexPage() {
-  
+
   const [data, setData] = useState({
     data: [] as any[],
     msg: ''
