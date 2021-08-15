@@ -12,6 +12,34 @@ function getService () {
   return strapi.plugins['wiz-note-share'].services['wiz-note-share'];
 }
 
+function formatAuthor (author) {
+  return {
+    id: author.id,
+    name: author.name,
+    imgUrl: author.picture.url
+  };
+}
+
+function formatArticle (data) {
+  
+  delete data.wizUrl;
+
+  return data;
+}
+
+function formatArticles (data) {
+  
+  data = data.map(item => {
+
+    item.author = formatAuthor(item.author);
+    item = formatArticle(item);
+
+    return item;
+  });
+
+  return data;
+}
+
 module.exports = {
 
   /**
@@ -38,11 +66,16 @@ module.exports = {
   },
 
   find: async (ctx) => {
-      return strapi.controllers.article.find(ctx);
+      let data = await strapi.controllers.article.find(ctx);
+      data = formatArticles(data);
+      return data;
   },
 
   findOneBySlug: async (ctx) => {
-    return strapi.controllers.article.findOneBySlug(ctx);
+    let data = await strapi.controllers.article.findOneBySlug(ctx);
+    data.author = formatAuthor(data.author);
+    data = formatArticle(data);
+    return data;
   },
 
   updateConfig: async (ctx) => {
