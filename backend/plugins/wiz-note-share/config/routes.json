@@ -11,10 +11,12 @@
     {
       "method": "GET",
       "path": "/config",
-      "handler": "wiz-note-share.findConfig",
-      "config": {
-        "policies": []
-      }
+      "handler": "wiz-note-share.findConfig"
+    },
+    {
+      "method": "POST",
+      "path": "/config",
+      "handler": "wiz-note-share.updateConfig"
     },
     {
       "method": "POST",

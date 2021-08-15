@@ -1,0 +1,13 @@
+{
+    "enabled": true,
+    "defaultConfig": {
+        "enabled": true,
+        "server": "",
+        "proxyPaths": [
+            "/wapp",
+            "/lang",
+            "/api",
+            "/share"
+        ]
+    }
+}

@@ -15,6 +15,19 @@
             "args": [
                 "develop"
             ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "debug admin",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}/node_modules/strapi/bin/strapi.js",
+            "args": [
+                "develop",
+                "--watch-admin"
+            ]
         }
     ]
 }

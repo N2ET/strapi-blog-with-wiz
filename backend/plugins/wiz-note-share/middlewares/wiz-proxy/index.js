@@ -1,33 +1,25 @@
 'use strict';
 
-const proxy = require('koa-proxies')
+const proxy = require('koa-proxies');
 
-const proxyPaths = [
-    '/wapp',
-    '/lang',
-    '/api',
-    '/share'
-];
+// const util = require('./util');
 
 // 需要在defaults.json里面配置enabled才会运行这个文件
 module.exports = strapi => ({
     async initialize () {
 
-        // try {
-        //     const config = await strapi.plugins['wiz-note-share'].controllers['wiz-note-share'].findConfig();
+        const service = strapi.plugins['wiz-note-share'].services['wiz-note-share'];
+        const config = await service.getStoreData();
 
-        //     if (!config) {
-        //         return;
-        //     }
-        // } catch (e) {
-        //     debugger;
-        // }
+        if (!config || !config.server || !config.proxyPaths.length) {
+            strapi.log.info('[wiz-note-share] no server or no proxyPaths configured')
+            return;
+        }
 
-
-        proxyPaths.forEach(item => {
+        config.proxyPaths.forEach(item => {
             strapi.app.use(
                 proxy(item, {
-                    target: 'https://objs.net:4430',
+                    target: config.server,
                     changeOrigin: true,
                     logs: true,
                     // events: {
@@ -42,5 +34,6 @@ module.exports = strapi => ({
             );
         });
 
+        strapi.log.info(`[wiz-proxy] running, proxy to ${config.server}`);
     }
 });

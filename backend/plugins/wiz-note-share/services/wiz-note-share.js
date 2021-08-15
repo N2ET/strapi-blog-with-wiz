@@ -186,6 +186,28 @@ const service = module.exports = {
             };
         }
 
+    },
+
+    getStore: function () {
+        const store = strapi.store({
+            type: 'plugin',
+            name: 'wiz-note-share',
+            key: 'settings'
+        });
+    
+        return store;
+    },
+    
+    getStoreData: async function (store) {
+        store = store || service.getStore();
+        return await store.get();
+    },
+    
+    setStoreData: async function (config, store) {
+        store = store || service.getStore();
+        return await store.set({
+            value: config
+        });
     }
 
 };

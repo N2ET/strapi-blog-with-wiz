@@ -1,21 +1,12 @@
 'use strict';
 
-const { default: createStrapi } = require('strapi');
 /**
  * wiz-note-share.js controller
  *
  * @description: A set of functions called "actions" of the `wiz-note-share` plugin.
  */
 
-const { sanitizeEntity } = require('strapi-utils');
-
-function getModelName () {
-  return 'plugins::wiz-note-share.wiz-note';
-}
-
-function getModel () {
-  return strapi.plugins['wiz-note-share'].models['wiz-note'];
-}
+// const { sanitizeEntity } = require('strapi-utils');
 
 function getService () {
   return strapi.plugins['wiz-note-share'].services['wiz-note-share'];
@@ -40,13 +31,10 @@ module.exports = {
 
   findConfig: async (ctx) => {
 
-    const entity = await strapi.entityService.find({}, {
-      model: getModelName()
-    });
+    const service = getService();
+    const config = await service.getStoreData();
 
-    return sanitizeEntity(entity, {
-      model: getModel()
-    });
+    return config;
   },
 
   find: async (ctx) => {
@@ -57,11 +45,35 @@ module.exports = {
     return strapi.controllers.article.findOne(ctx);
   },
 
+  updateConfig: async (ctx) => {
+    const body = ctx.request.body;
+
+    if (!body.server || typeof(body.enabled) === 'undefined') {
+      throw new strapi.errors.badRequest('ValidationError', {
+        errors: ['server & enabled required']
+      })
+    }
+
+    const service = getService();
+
+    const config = await service.getStoreData();
+
+    await service.setStoreData({
+      ...config,
+      enabled: body.enabled,
+      server: body.server
+    });
+
+    return {
+
+    };
+  },
+
   create: async (ctx) => {
 
     if (!ctx.request.body?.url) {
       throw new strapi.errors.badRequest('ValidationError', {
-        errors: ['url is required']
+        errors: ['url required']
       })
     }
 
