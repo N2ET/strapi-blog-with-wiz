@@ -3,10 +3,7 @@
     {
       "method": "GET",
       "path": "/",
-      "handler": "wiz-note-share.index",
-      "config": {
-        "policies": []
-      }
+      "handler": "wiz-note-share.index"
     },
     {
       "method": "GET",
@@ -20,7 +17,7 @@
     },
     {
       "method": "POST",
-      "path": "/articles",
+      "path": "/create_article",
       "handler": "wiz-note-share.create"
     },
     {
@@ -31,7 +28,12 @@
     {
       "method": "GET",
       "path": "/articles/:slug",
-      "handler": "wiz-note-share.findOne"
+      "handler": "wiz-note-share.findOneBySlug"
+    },
+    {
+      "method": "GET",
+      "path": "/writers",
+      "handler": "wiz-note-share.findWriters"
     }
   ]
 }

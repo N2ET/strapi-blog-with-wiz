@@ -41,8 +41,8 @@ module.exports = {
       return strapi.controllers.article.find(ctx);
   },
 
-  findOne: async (ctx) => {
-    return strapi.controllers.article.findOne(ctx);
+  findOneBySlug: async (ctx) => {
+    return strapi.controllers.article.findOneBySlug(ctx);
   },
 
   updateConfig: async (ctx) => {
@@ -71,7 +71,8 @@ module.exports = {
 
   create: async (ctx) => {
 
-    if (!ctx.request.body?.url) {
+    const body = ctx.request.body;
+    if (!body.url || !body.userId) {
       throw new strapi.errors.badRequest('ValidationError', {
         errors: ['url required']
       })
@@ -84,7 +85,8 @@ module.exports = {
     try {
     
       result = await service.createWizArticle({
-        url: ctx.request.body.url
+        url: body.url,
+        userId: body.userId
       });
 
       return {
@@ -106,5 +108,14 @@ module.exports = {
 
     }
 
+  },
+
+  findWriters: async (ctx) => {
+    const data = await strapi.controllers.writer.find(ctx);
+    const ret = data.map(item => ({
+      label: item.name,
+      value: item.id
+    }));
+    return ret;
   }
 };

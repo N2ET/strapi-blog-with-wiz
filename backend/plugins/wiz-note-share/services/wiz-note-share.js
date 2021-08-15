@@ -7,6 +7,7 @@
  */
 
 const axios = require('axios');
+const pinyin = require('pinyin');
 
 const AGENT = 'strapi-plugin-wiz-note-share 1.0';
 const TIMEOUT = 60 * 1000;
@@ -33,13 +34,17 @@ function formatTitle (title) {
     return title.replace(/\.[^.]+$/, '');
 }
 
-function getSlug (text) {
-    return new Date().getTime().toString();
+function getSlug (title) {
+    let ret = pinyin(title, {
+        style: pinyin.STYLE_NORMAL  
+    });
+
+    return ret.join('').replace(/\s*/g, '');
 }
 
 const service = module.exports = {
 
-    async createWizArticle ({ url }) {
+    async createWizArticle ({ url, userId }) {
 
         let text  = await service.getWizNoteArticle({ url });
         let data = await service.getWizNoteArticleData({ url });
@@ -54,7 +59,8 @@ const service = module.exports = {
             return await service.createArticle({
                 url: url,
                 data: data.data,
-                text: text.data
+                text: text.data,
+                userId
             });
 
         } catch (e) {
@@ -126,7 +132,7 @@ const service = module.exports = {
         }
     },
 
-    async createArticle ({ url, data, text }) {
+    async createArticle ({ url, data, text, userId }) {
 
         let categoryName = data.category[data.category.length - 1] || '默认分类';
 
@@ -158,7 +164,7 @@ const service = module.exports = {
                     created_at: data.created,
     
                     category: category.id,
-                    author: 3
+                    author: userId
                 });
     
             } else {
@@ -208,6 +214,8 @@ const service = module.exports = {
         return await store.set({
             value: config
         });
-    }
+    },
+
+    getSlug: getSlug
 
 };

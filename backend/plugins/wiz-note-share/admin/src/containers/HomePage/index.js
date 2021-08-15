@@ -31,6 +31,8 @@ const HomePage = () => {
     server: ''
   });
   const [aritcleUrl, setArticleUrl] = useState('');
+  const [userList, setUserList] = useState([]);
+  const [userId, setUserId] = useState();
   
   const headerProps = {
     title: {
@@ -106,6 +108,17 @@ const HomePage = () => {
       value: aritcleUrl,
       onChange: handleArticleUrlChangeFn('url'),
       required: true
+    },
+    user: {
+      styleName: className,
+      label: '作者',
+      type: 'select',
+      required: true,
+      value: userId,
+      options: userList,
+      onChange: function (e) {
+        setUserId(e.target.value);
+      }
     }
   };
 
@@ -117,6 +130,19 @@ const HomePage = () => {
       })
       .catch(data => {
         strapi.notification.error(data.message || '加载数据失败');
+      });
+
+
+    axios.get('/wiz-note-share/writers')
+      .then(data => {
+        setUserList(data.data);
+        if (data.data.length) {
+          setUserId(data.data[0].value);
+        }
+        
+      })
+      .catch(data => {
+        strapi.notification.error(data.message || '加载作者失败');
       });
 
   }, []);
@@ -135,8 +161,9 @@ const HomePage = () => {
   }
 
   function shareArticle () {
-    axios.post('/wiz-note-share/share', {
-      url: aritcleUrl
+    axios.post('/wiz-note-share/create_article', {
+      url: aritcleUrl,
+      userId: userId
     })
       .then(data => {
         setArticleUrl('');
